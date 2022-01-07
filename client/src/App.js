@@ -12,10 +12,11 @@ import { useSelector } from "react-redux";
 function App() {
   const dispatch = useDispatch();
   let nodeTypes = useSelector(selectNodeTypes);
-  window.nodeTypes = nodeTypes;
+
   function handleSubmit(nodeType) {
     nodeTypes = dispatch(addNodeType(nodeType));
   }
+
   return (
     <div className="App">
       <header className="App-header">
