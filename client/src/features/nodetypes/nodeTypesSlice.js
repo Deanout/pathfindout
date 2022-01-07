@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getNodeTypesFromAPI } from "./NodeTypesAPI";
 
 const initialState = {
   nodeTypes: [
@@ -10,6 +11,12 @@ const initialState = {
     },
   ],
 };
+
+export const retrieveNodeTypes = createAsyncThunk("getNodeTypes", async () => {
+  const response = await getNodeTypesFromAPI();
+  // The value we return becomes the `fulfilled` action payload
+  return response;
+});
 
 // create a nodetypes slice function that contains reducers for:
 // adding a nodetype
@@ -35,10 +42,13 @@ export const nodeTypesSlice = createSlice({
         return nodeType;
       });
     },
+    setNodeTypes: (state, action) => {
+      state.nodeTypes = action.payload;
+    },
   },
 });
 
-export const { addNodeType, deleteNodeType, editNodeType } =
+export const { addNodeType, deleteNodeType, editNodeType, setNodeTypes } =
   nodeTypesSlice.actions;
 
 /**

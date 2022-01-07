@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import { addNodeType } from "./nodeTypesSlice";
+import { useDispatch } from "react-redux";
 
 export function NodeTypes(props) {
+  const dispatch = useDispatch();
+
   const [name, setName] = useState("");
   const [weight, setWeight] = useState(0);
   const [color, setColor] = useState("");
@@ -14,7 +18,7 @@ export function NodeTypes(props) {
     setName("");
     setWeight(0);
     setColor("");
-    props.handleSubmit(nodeType);
+    dispatch(addNodeType(nodeType));
   }
 
   function handleNameChange(value) {
