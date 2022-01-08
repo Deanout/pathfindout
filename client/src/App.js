@@ -7,6 +7,10 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        {/* Navbar*/}
+        {/* Grid */}
+
+        {/* NodeTypes creation view? Pane?*/}
         <NodeTypes />
         <NodeTypesList />
       </header>

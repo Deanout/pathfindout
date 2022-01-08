@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { addNodeType } from "./nodeTypesSlice";
+import {
+  retrieveNodeTypes,
+  addNodeTypeToAPI,
+  setNodeTypes,
+} from "./nodeTypesSlice";
 import { useDispatch } from "react-redux";
 
 export function NodeTypes(props) {
-  const dispatch = useDispatch();
-
   const [name, setName] = useState("");
   const [weight, setWeight] = useState(0);
   const [color, setColor] = useState("");
-
-  function handleClick(value) {
+  const dispatch = useDispatch();
+  function handleClick() {
     const nodeType = {
       name: name,
       weight: weight,
@@ -18,7 +20,13 @@ export function NodeTypes(props) {
     setName("");
     setWeight(0);
     setColor("");
-    dispatch(addNodeType(nodeType));
+    console.log(`Submitting ${JSON.stringify(nodeType)}`);
+    dispatch(addNodeTypeToAPI(nodeType)).then(() => {
+      dispatch(retrieveNodeTypes()).then((response) => {
+        dispatch(setNodeTypes(response.payload));
+      });
+    });
+    //props.onSubmit(nodeType);
   }
 
   function handleNameChange(value) {
@@ -57,9 +65,7 @@ export function NodeTypes(props) {
             onChange={(e) => handleColorChange(e.target.value)}
           />
         </div>
-        <button onClick={(event) => handleClick(event.target.value)}>
-          Add node type{" "}
-        </button>
+        <button onClick={() => handleClick()}>Add node type </button>
       </div>
     </div>
   );

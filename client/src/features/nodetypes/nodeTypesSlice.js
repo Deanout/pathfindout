@@ -1,28 +1,51 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getNodeTypesFromAPI, addNodeTypeToDatabase } from "./NodeTypesAPI";
+import {
+  getNodeTypesFromAPI,
+  addNodeTypeToDatabase,
+  destroyAllNodeTypes,
+  destroyNodeType,
+} from "./NodeTypesAPI";
 
 const initialState = {
-  nodeTypes: [
-    {
-      id: 1,
-      name: "Air",
-      weight: 0,
-      color: "#fff",
-    },
-  ],
+  nodeTypes: [],
 };
-
-export const retrieveNodeTypes = createAsyncThunk("getNodeTypes", async () => {
-  const response = await getNodeTypesFromAPI();
+// The function below is called a thunk and allows us to perform async logic. It
+// can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
+// will call the thunk with the `dispatch` function as the first argument. Async
+// code can then be executed and other actions can be dispatched. Thunks are
+// typically used to make async requests.
+export const retrieveNodeTypes = createAsyncThunk("/getNodeTypes", async () => {
+  var response = await getNodeTypesFromAPI();
+  console.log("Retrieved the following nodeTypes: " + response);
   // The value we return becomes the `fulfilled` action payload
   return response;
 });
 
 export const addNodeTypeToAPI = createAsyncThunk(
-  "addNodeType",
+  "/addNodeType",
   async (payload) => {
+    console.log("Calling addNodeTypeToAPI...");
     const response = await addNodeTypeToDatabase(payload);
     // The value we return becomes the `fulfilled` action payload
+    return response;
+  }
+);
+
+// create a function to delete a node type from the api by _id
+export const deleteNodeTypeFromAPI = createAsyncThunk(
+  "/destroyNodeType",
+  async (payload) => {
+    const response = await destroyNodeType(payload);
+    // The value we return becomes the `fulfilled` action payload
+    return response;
+  }
+);
+
+export const deleteAllNodeTypesFromAPI = createAsyncThunk(
+  "/destroyAllNodeTypes",
+  async () => {
+    const response = await destroyAllNodeTypes();
+    window.response = response;
     return response;
   }
 );
@@ -30,14 +53,6 @@ export const nodeTypesSlice = createSlice({
   name: "nodeTypes",
   initialState,
   reducers: {
-    addNodeType: (state, action) => {
-      state.nodeTypes.push(addNodeTypeToAPI(action.payload));
-    },
-    deleteNodeType: (state, action) => {
-      state.nodeTypes = state.nodeTypes.filter(
-        (nodeType) => nodeType.id !== action.payload
-      );
-    },
     editNodeType: (state, action) => {
       state.nodeTypes = state.nodeTypes.map((nodeType) => {
         if (nodeType.id === action.payload.id) {
@@ -52,8 +67,13 @@ export const nodeTypesSlice = createSlice({
   },
 });
 
-export const { addNodeType, deleteNodeType, editNodeType, setNodeTypes } =
-  nodeTypesSlice.actions;
+export const {
+  addNodeType,
+  deleteNodeType,
+  editNodeType,
+  setNodeTypes,
+  deleteAllNodeTypes,
+} = nodeTypesSlice.actions;
 
 /**
  * Selectors allow us to choose a value from the state. Here we're selecting the

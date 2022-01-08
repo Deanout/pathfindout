@@ -3,12 +3,13 @@ import {
   selectNodeTypes,
   setNodeTypes,
   retrieveNodeTypes,
+  deleteAllNodeTypesFromAPI,
+  deleteNodeTypeFromAPI,
 } from "./nodeTypesSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
 function NodeTypesList(props) {
-  console.log(props);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(retrieveNodeTypes())
@@ -20,11 +21,29 @@ function NodeTypesList(props) {
       });
   }, [dispatch]);
 
+  function handleClick() {
+    console.log("Handling Delete Click");
+    dispatch(deleteAllNodeTypesFromAPI()).then((response) => {
+      dispatch(setNodeTypes(response.payload));
+    });
+  }
+  function handleDeleteClick(event) {
+    const nodeType = event.target.name;
+    console.log(`Handling Delete Click for ${nodeType}`);
+    dispatch(deleteNodeTypeFromAPI(nodeType)).then((response) => {
+      dispatch(retrieveNodeTypes()).then((response) => {
+        dispatch(setNodeTypes(response.payload));
+      });
+    });
+  }
+
   let nodeTypes = useSelector(selectNodeTypes);
-  console.log(nodeTypes);
   return (
     <div>
       <h2>Node Types</h2>
+      <p>
+        <button onClick={() => handleClick()}>Delete All NodeTypes</button>
+      </p>
       <table>
         <thead>
           <tr>
@@ -32,6 +51,7 @@ function NodeTypesList(props) {
             <th>Name</th>
             <th>Weight</th>
             <th>Color</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -41,6 +61,14 @@ function NodeTypesList(props) {
               <td>{nodeType.name}</td>
               <td>{nodeType.weight}</td>
               <td>{nodeType.color}</td>
+              <td>
+                <button
+                  name={JSON.stringify(nodeType)}
+                  onClick={(event) => handleDeleteClick(event)}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
