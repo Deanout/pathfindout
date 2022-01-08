@@ -29,9 +29,20 @@ app.get("/", async (request, response) => {
 });
 
 app.get("/getNodeTypes", async (request, response) => {
+  console.log("Getting node types...");
   try {
     const nodeTypes = await NodeTypeModel.find();
     response.send(nodeTypes);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post("/addNodeType", async (request, response) => {
+  console.log("Adding a node type...");
+  try {
+    const nodeType = await NodeTypeModel.create(request.body);
+    response.send(nodeType);
   } catch (error) {
     console.log(error);
   }

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getNodeTypesFromAPI } from "./NodeTypesAPI";
+import { getNodeTypesFromAPI, addNodeTypeToDatabase } from "./NodeTypesAPI";
 
 const initialState = {
   nodeTypes: [
@@ -18,16 +18,20 @@ export const retrieveNodeTypes = createAsyncThunk("getNodeTypes", async () => {
   return response;
 });
 
-// create a nodetypes slice function that contains reducers for:
-// adding a nodetype
-// deleting a nodetype
-// editing a nodetype
+export const addNodeTypeToAPI = createAsyncThunk(
+  "addNodeType",
+  async (payload) => {
+    const response = await addNodeTypeToDatabase(payload);
+    // The value we return becomes the `fulfilled` action payload
+    return response;
+  }
+);
 export const nodeTypesSlice = createSlice({
   name: "nodeTypes",
   initialState,
   reducers: {
     addNodeType: (state, action) => {
-      state.nodeTypes.push(action.payload);
+      state.nodeTypes.push(addNodeTypeToAPI(action.payload));
     },
     deleteNodeType: (state, action) => {
       state.nodeTypes = state.nodeTypes.filter(

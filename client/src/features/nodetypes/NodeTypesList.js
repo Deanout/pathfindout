@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 
 function NodeTypesList(props) {
   console.log(props);
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(retrieveNodeTypes())
       .then((response) => {
@@ -17,18 +18,33 @@ function NodeTypesList(props) {
       .then((response) => {
         dispatch(setNodeTypes(response));
       });
-  }, []);
-  const dispatch = useDispatch();
+  }, [dispatch]);
 
   let nodeTypes = useSelector(selectNodeTypes);
+  console.log(nodeTypes);
   return (
     <div>
       <h2>Node Types</h2>
-      <ul>
-        {nodeTypes?.nodeTypes?.map((nodeType, index) => (
-          <li key={`nodetype-${index}`}>{nodeType.name}</li>
-        ))}
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Weight</th>
+            <th>Color</th>
+          </tr>
+        </thead>
+        <tbody>
+          {nodeTypes?.nodeTypes?.map((nodeType) => (
+            <tr key={`nodetype-${nodeType._id}`}>
+              <td>{nodeType._id}</td>
+              <td>{nodeType.name}</td>
+              <td>{nodeType.weight}</td>
+              <td>{nodeType.color}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

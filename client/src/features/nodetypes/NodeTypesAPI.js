@@ -15,9 +15,9 @@ export function fetchCount(amount = 1) {
   );
 }
 
-export function addNodeType(nodeType) {
-  return async (dispatch) => {
-    const response = await Axios.post("/api/nodetypes");
-    dispatch(addNodeType(response.data));
-  };
+export function addNodeTypeToDatabase(payload) {
+  const url = API_URL + "/addNodeType";
+  return Axios.post(url, payload).then((response) => {
+    return response.data;
+  });
 }
