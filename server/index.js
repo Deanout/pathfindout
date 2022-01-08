@@ -13,13 +13,12 @@ app.use(cors());
 
 mongoose.connect(CONNECTION_STRING, { useNewUrlParser: true });
 
-const airNode = new NodeTypeModel({
-  name: "Air",
-  weight: 0,
-  color: "#FFF",
-});
-
 app.get("/", async (request, response) => {
+  const airNode = new NodeTypeModel({
+    name: "Air",
+    weight: 0,
+    color: "#FFF",
+  });
   try {
     await airNode.save();
     response.send("Saved");
@@ -43,6 +42,32 @@ app.post("/addNodeType", async (request, response) => {
   try {
     const nodeType = await NodeTypeModel.create(request.body);
     response.send(nodeType);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.delete("/destroyAllNodeTypes", async (request, response) => {
+  console.log("Destroying all node types...");
+
+  try {
+    await NodeTypeModel.deleteMany();
+    const nodeTypes = await NodeTypeModel.find();
+    response.send(nodeTypes);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.delete("/destroyNodeType", async (request, response) => {
+  console.log("Destroying a node type...");
+  const nodeToDelete = request.body.payload._id;
+  console.log(request.body);
+  console.log(nodeToDelete);
+  try {
+    await NodeTypeModel.deleteOne({ _id: nodeToDelete });
+    const nodeTypes = await NodeTypeModel.find();
+    response.send(nodeTypes);
   } catch (error) {
     console.log(error);
   }
