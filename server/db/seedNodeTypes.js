@@ -1,4 +1,4 @@
-const NodeTypeModel = require("../models/NodeTypes");
+const NodeTypeModel = require("../models/NodeTypesModel");
 
 const Air = new NodeTypeModel({
   name: "Air",

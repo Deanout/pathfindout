@@ -4,9 +4,12 @@ import { selectLeftMouseButtonState } from "../grid/gridSlice";
 import { selectCurrentNodeType } from "../nodetypes/nodeTypesSlice";
 import "./Node.css";
 function Node(props) {
-  const [nodeStyle, setNodeStyle] = useState({});
+  const initialColor = props.nodeType.color;
+  const [nodeStyle, setNodeStyle] = useState({ backgroundColor: initialColor });
   const leftMouseButtonState = useSelector(selectLeftMouseButtonState);
   const currentNodeType = useSelector(selectCurrentNodeType);
+  // console.log("Inside the node");
+  // console.log(props.nodeType);
 
   function handleClick() {
     modifyNode(currentNodeType);
@@ -16,8 +19,8 @@ function Node(props) {
    * If the mouse button is down, console.log("Mouse is down")
    */
   function handleMouseEnter() {
-    console.log(leftMouseButtonState);
-    console.log(currentNodeType);
+    // console.log(leftMouseButtonState);
+    // console.log(currentNodeType);
     if (leftMouseButtonState === 1) {
       modifyNode(currentNodeType);
     }

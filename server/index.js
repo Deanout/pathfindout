@@ -3,7 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const NodeTypeModel = require("./models/NodeTypes");
+const NodeTypeModel = require("./models/NodeTypesModel");
 const GridModel = require("./models/GridModel");
 
 const NodeTypes = require("./db/seedNodeTypes");
@@ -36,15 +36,7 @@ app.get("/", async (request, response) => {
 
 app.get("/seedNodeTypes", async (request, response) => {
   console.log("Seeding + " + NodeTypes.length + " NodeTypes...");
-  for (let i = 0; i < NodeTypes.length; i++) {
-    const nodeType = NodeTypes[i];
-    try {
-      console.log("Seeding nodetype.");
-      await nodeType.save();
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  seedNodeTypes(request, response);
   try {
     const nodeTypes = await NodeTypeModel.find();
     response.send(nodeTypes);
@@ -62,6 +54,18 @@ app.get("/getNodeTypes", async (request, response) => {
     console.log(error);
   }
 });
+
+async function seedNodeTypes() {
+  for (let i = 0; i < NodeTypes.length; i++) {
+    const nodeType = NodeTypes[i];
+    try {
+      console.log("Seeding nodetype.");
+      await nodeType.save();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
 
 app.get("/seedGrids", async (request, response) => {
   console.log("Seeding + " + Grids.length + " Grids...");

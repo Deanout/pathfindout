@@ -12,15 +12,6 @@ import { useDispatch } from "react-redux";
 
 function NodeTypesList(props) {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(retrieveNodeTypes())
-      .then((response) => {
-        return response.payload;
-      })
-      .then((response) => {
-        dispatch(setNodeTypes(response));
-      });
-  }, [dispatch]);
 
   function handleClick() {
     console.log("Handling Delete Click");

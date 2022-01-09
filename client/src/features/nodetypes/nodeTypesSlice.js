@@ -17,7 +17,6 @@ const initialState = {
 // typically used to make async requests.
 export const retrieveNodeTypes = createAsyncThunk("/getNodeTypes", async () => {
   var response = await getNodeTypesFromAPI();
-  console.log("Retrieved the following nodeTypes: " + response);
   // The value we return becomes the `fulfilled` action payload
   return response;
 });

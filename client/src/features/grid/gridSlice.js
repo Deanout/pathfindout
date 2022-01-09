@@ -18,7 +18,6 @@ const initialState = {
  */
 export const getInitialGrid = createAsyncThunk("/getInitialGrid", async () => {
   var response = await getInitialGridFromAPI();
-  console.log("Retrieved the following grid: " + JSON.stringify(response));
   // The value we return becomes the `fulfilled` action payload
   return response;
 });
@@ -31,7 +30,11 @@ export const gridStoreSlice = createSlice({
       state.gridSize = { width: state.grid.width, height: state.grid.height };
     },
     setGrid: (state, action) => {
-      state.grid = action.payload;
+      const convertedGrid = convertGridNumbersToNodeTypes(
+        action.payload.data,
+        action.payload.nodeTypes
+      );
+      state.grid.data = convertedGrid;
     },
     setLeftMouseButtonState: (state, action) => {
       state.leftMouseButtonState = action.payload;
@@ -39,6 +42,20 @@ export const gridStoreSlice = createSlice({
     },
   },
 });
+
+function convertGridNumbersToNodeTypes(gridToConvert, nodeTypes) {
+  for (var i = 0; i < gridToConvert.length; i++) {
+    for (var j = 0; j < gridToConvert[i].length; j++) {
+      if (j % 2 === 0) {
+        gridToConvert[i][j] = nodeTypes[0];
+      } else {
+        gridToConvert[i][j] = nodeTypes[1];
+      }
+      //gridToConvert[i][j] = nodeTypes[gridToConvert[i][j]];
+    }
+  }
+  return gridToConvert;
+}
 
 export const { setGridSize, setLeftMouseButtonState, setGrid } =
   gridStoreSlice.actions;

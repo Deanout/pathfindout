@@ -21,7 +21,7 @@ function initMouseButtonListeners(dispatch) {
    * @param {*} e
    */
   function setButtonStates(e) {
-    console.log(e.buttons + " " + prevMouseState);
+    // console.log(e.buttons + " " + prevMouseState);
     switch (e.buttons) {
       case prevMouseState:
         break;
