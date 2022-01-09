@@ -4,16 +4,22 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const NodeTypeModel = require("./models/NodeTypes");
+const GridModel = require("./models/GridModel");
+
 const NodeTypes = require("./db/seedNodeTypes");
+const Grids = require("./db/seedGrids");
 require("dotenv").config();
 
 const SERVER_PORT = 3001;
 /**
- * Get DB password from environment variable.
+ * Get DB password from .env file.
  */
 const DB_PASSWORD = process.env.DB_PASSWORD;
-console.log(DB_PASSWORD);
-const CONNECTION_STRING = `mongodb+srv://deanout:${DB_PASSWORD}@pathfindout.uu8xi.mongodb.net/pathfindout?retryWrites=true&w=majority`;
+/**
+ * Get DB name from .env file.
+ */
+const DB_USER = process.env.DB_USER;
+const CONNECTION_STRING = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@pathfindout.uu8xi.mongodb.net/pathfindout?retryWrites=true&w=majority`;
 app.use(express.json());
 app.use(cors());
 
@@ -52,6 +58,47 @@ app.get("/getNodeTypes", async (request, response) => {
   try {
     const nodeTypes = await NodeTypeModel.find();
     response.send(nodeTypes);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get("/seedGrids", async (request, response) => {
+  console.log("Seeding + " + Grids.length + " Grids...");
+  for (let i = 0; i < Grids.length; i++) {
+    const grid = Grids[i];
+    try {
+      console.log("Seeding grid.");
+      await grid.save();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  try {
+    const grids = await GridModel.find();
+    response.send(grids);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get("/getInitialGrid", async (request, response) => {
+  console.log("Getting initial grid...");
+  try {
+    const grid = await GridModel.findOne({ name: "Initial Grid" });
+    response.send(grid);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.delete("/destroyAllGrids", async (request, response) => {
+  console.log("Destroying all grids...");
+
+  try {
+    await GridModel.deleteMany();
+    const grids = await GridModel.find();
+    response.send(grids);
   } catch (error) {
     console.log(error);
   }

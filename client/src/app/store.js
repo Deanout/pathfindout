@@ -7,6 +7,6 @@ export const store = configureStore({
   reducer: {
     counter: counterReducer,
     nodeTypes: nodeTypesReducer,
-    grid: gridReducer,
+    gridStore: gridReducer,
   },
 });

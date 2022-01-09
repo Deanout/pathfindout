@@ -4,15 +4,12 @@ import { selectLeftMouseButtonState } from "../grid/gridSlice";
 import { selectCurrentNodeType } from "../nodetypes/nodeTypesSlice";
 import "./Node.css";
 function Node(props) {
-  const initialClass = "node ";
-  const [nodeClass, setNodeClass] = useState(initialClass);
+  const [nodeStyle, setNodeStyle] = useState({});
   const leftMouseButtonState = useSelector(selectLeftMouseButtonState);
   const currentNodeType = useSelector(selectCurrentNodeType);
 
   function handleClick() {
-    props.onClickCallback(props.row, props.col);
-    const newClass = currentNodeType.name;
-    createNodeClass(newClass);
+    modifyNode(currentNodeType);
   }
   /**
    * Check if the left mouse button is down.
@@ -22,24 +19,25 @@ function Node(props) {
     console.log(leftMouseButtonState);
     console.log(currentNodeType);
     if (leftMouseButtonState === 1) {
-      console.log("True");
-      const newClass = currentNodeType.name;
-      createNodeClass(newClass);
+      modifyNode(currentNodeType);
     }
   }
 
-  function createNodeClass(newClass) {
-    setNodeClass(initialClass + newClass);
+  function modifyNode() {
+    setNodeStyle({ backgroundColor: currentNodeType.color });
   }
-  return (
+  const nodeContainer = (
     <div
-      className={nodeClass}
+      id={`node-${props.row}-${props.col}`}
+      className={"node"}
+      style={nodeStyle}
       onDragStart={() => false}
       draggable="false"
       onClick={() => handleClick()}
       onMouseEnter={() => handleMouseEnter()}
     ></div>
   );
+  return nodeContainer;
 }
 
 export default Node;

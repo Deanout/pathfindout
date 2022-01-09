@@ -18,5 +18,6 @@ Inside that file, include the DB password that you have setup on your MongoDBClo
 File contents should look like this
 
 ```md
+DB_USER=myusername
 DB_PASSWORD=mypassword123
 ```

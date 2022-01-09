@@ -2,16 +2,21 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Node from "../nodes/Node";
 import "./Grid.css";
-import { selectGridSize } from "./gridSlice";
+import { selectGridSize, selectGrid } from "./gridSlice";
 import { selectNodeTypes } from "../nodetypes/nodeTypesSlice";
+
+const mapStateToProps = (state) => {
+  return {
+    grid: selectGrid(state),
+  };
+};
 
 function Grid() {
   const dispatch = useDispatch();
-  const gridSize = selectGridSize();
+  const grid = useSelector(selectGrid);
+  console.log("Logging the grid: ");
+  console.log(grid);
   const nodeTypes = useSelector(selectNodeTypes);
-
-  let width = gridSize.width;
-  let height = gridSize.height;
 
   function handleNodeClick(row, col) {
     console.log(row + ", " + col);
@@ -19,9 +24,9 @@ function Grid() {
 
   return (
     <div className="grid">
-      {createGrid(width, height).map((row, rowIdx) => {
+      {grid.map((row, rowIdx) => {
         return (
-          <div className="row" key={rowIdx}>
+          <div className="row" key={rowIdx} onDragStart={() => false}>
             {row.map((col, colIdx) => {
               return (
                 <Node
@@ -29,6 +34,7 @@ function Grid() {
                   row={rowIdx}
                   col={colIdx}
                   onClickCallback={() => handleNodeClick(rowIdx, colIdx)}
+                  onDragStart={() => false}
                 />
               );
             })}
@@ -37,15 +43,5 @@ function Grid() {
       })}
     </div>
   );
-}
-function createGrid(width, height) {
-  let grid = [];
-  for (let i = 0; i < width; i++) {
-    grid.push([]);
-    for (let j = 0; j < height; j++) {
-      grid[i].push([]);
-    }
-  }
-  return grid;
 }
 export default Grid;
