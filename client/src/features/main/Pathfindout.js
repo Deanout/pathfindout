@@ -43,6 +43,7 @@ function Pathfindout() {
   const dispatch = useDispatch();
   prevMouseState = 0;
   initMouseButtonListeners(dispatch);
+
   return (
     <main>
       <Grid />

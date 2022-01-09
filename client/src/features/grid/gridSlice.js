@@ -2,8 +2,22 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   gridSize: { width: 25, height: 25 },
+  grid: [],
   leftMouseButtonState: 0,
 };
+
+/**
+ * function createGrid(width, height) {
+  let grid = [];
+  for (let i = 0; i < width; i++) {
+    grid.push([]);
+    for (let j = 0; j < height; j++) {
+      grid[i].push([]);
+    }
+  }
+  return grid;
+}
+ */
 
 export const gridSlice = createSlice({
   name: "grid",
