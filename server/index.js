@@ -5,10 +5,15 @@ const cors = require("cors");
 
 const NodeTypeModel = require("./models/NodeTypes");
 const NodeTypes = require("./db/seedNodeTypes");
+require("dotenv").config();
 
 const SERVER_PORT = 3001;
-const CONNECTION_STRING =
-  "mongodb+srv://deanout:nwj5kjv2ynf7VMH-ktf@pathfindout.uu8xi.mongodb.net/pathfindout?retryWrites=true&w=majority";
+/**
+ * Get DB password from environment variable.
+ */
+const DB_PASSWORD = process.env.DB_PASSWORD;
+console.log(DB_PASSWORD);
+const CONNECTION_STRING = `mongodb+srv://deanout:${DB_PASSWORD}@pathfindout.uu8xi.mongodb.net/pathfindout?retryWrites=true&w=majority`;
 app.use(express.json());
 app.use(cors());
 
