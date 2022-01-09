@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const NodeTypeModel = require("./models/NodeTypes");
+const NodeTypes = require("./db/seedNodeTypes");
 
 const SERVER_PORT = 3001;
 const CONNECTION_STRING =
@@ -14,14 +15,28 @@ app.use(cors());
 mongoose.connect(CONNECTION_STRING, { useNewUrlParser: true });
 
 app.get("/", async (request, response) => {
-  const airNode = new NodeTypeModel({
-    name: "Air",
-    weight: 0,
-    color: "#FFF",
-  });
   try {
     await airNode.save();
     response.send("Saved");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get("/seedNodeTypes", async (request, response) => {
+  console.log("Seeding + " + NodeTypes.length + " NodeTypes...");
+  for (let i = 0; i < NodeTypes.length; i++) {
+    const nodeType = NodeTypes[i];
+    try {
+      console.log("Seeding nodetype.");
+      await nodeType.save();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  try {
+    const nodeTypes = await NodeTypeModel.find();
+    response.send(nodeTypes);
   } catch (error) {
     console.log(error);
   }

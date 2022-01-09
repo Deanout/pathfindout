@@ -4,6 +4,7 @@ const NodeTypesSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
   },
   weight: {
     type: Number,
@@ -12,6 +13,11 @@ const NodeTypesSchema = new mongoose.Schema({
   color: {
     type: String,
     required: true,
+  },
+  walkable: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
 });
 

@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Node from "../nodes/Node";
 import "./Grid.css";
 import { selectGridSize } from "./gridSlice";
+import { selectNodeTypes } from "../nodetypes/nodeTypesSlice";
 
 function Grid() {
   const dispatch = useDispatch();
   const gridSize = selectGridSize();
+  const nodeTypes = useSelector(selectNodeTypes);
+
   let width = gridSize.width;
   let height = gridSize.height;
 

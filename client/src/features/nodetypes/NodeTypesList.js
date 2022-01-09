@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import {
   selectNodeTypes,
   setNodeTypes,
+  setNodeType,
   retrieveNodeTypes,
   deleteAllNodeTypesFromAPI,
   deleteNodeTypeFromAPI,
@@ -36,6 +37,10 @@ function NodeTypesList(props) {
       });
     });
   }
+  function handleNodeTypeClick(id) {
+    console.log(`Handling NodeType Click for ${id}`);
+    dispatch(setNodeType({ id: id }));
+  }
 
   let nodeTypes = useSelector(selectNodeTypes);
   return (
@@ -51,7 +56,8 @@ function NodeTypesList(props) {
             <th>Name</th>
             <th>Weight</th>
             <th>Color</th>
-            <th>Actions</th>
+            <th>Select</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -61,6 +67,17 @@ function NodeTypesList(props) {
               <td>{nodeType.name}</td>
               <td>{nodeType.weight}</td>
               <td>{nodeType.color}</td>
+              <td>
+                <div
+                  style={{
+                    border: "1px solid black",
+                    backgroundColor: `${nodeType.color}`,
+                    width: "1em",
+                    height: "1em",
+                  }}
+                  onClick={() => handleNodeTypeClick(nodeType._id)}
+                ></div>
+              </td>
               <td>
                 <button
                   name={JSON.stringify(nodeType)}

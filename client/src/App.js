@@ -1,19 +1,17 @@
 import { Container } from "@mui/material";
 import React from "react";
 import "./App.css";
-import Main from "./features/main/Main";
+import Pathfindout from "./features/main/Pathfindout";
 import ResponsiveAppBar from "./features/navbar/ResponsiveAppBar";
-import { NodeTypes } from "./features/nodetypes/NodeTypes";
-import NodeTypesList from "./features/nodetypes/NodeTypesList";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
+      <div className="App-header">
         <ResponsiveAppBar />
-      </header>
+      </div>
       <Container maxWidth="sm">
-        <Main />
+        <Pathfindout />
       </Container>
 
       {/* NodeTypes creation view? Pane?*/}
