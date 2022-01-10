@@ -1,6 +1,6 @@
 import React from "react";
 import Grid from "../grid/Grid";
-import { useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { setLeftMouseButtonState } from "../grid/gridSlice";
 import NodeTypesList from "../nodetypes/NodeTypesList";
 
@@ -39,18 +39,25 @@ function initMouseButtonListeners(dispatch) {
   }
 }
 
-function Pathfindout() {
+function Pathfindout(props) {
   const dispatch = useDispatch();
   prevMouseState = 0;
   initMouseButtonListeners(dispatch);
+  console.log("Pathfindout");
+  console.log(props.gridStore.grid);
 
   return (
     <main>
-      <Grid />
+      <Grid nodeTypes={props.nodeTypes.nodeTypes} grid={props.gridStore.grid} />
       <br />
       <NodeTypesList />
     </main>
   );
 }
-
-export default Pathfindout;
+const mapStateToProps = (state) => {
+  return {
+    nodeTypes: state.nodeTypes,
+    gridStore: state.gridStore,
+  };
+};
+export default connect(mapStateToProps)(Pathfindout);

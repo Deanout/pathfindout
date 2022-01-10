@@ -11,6 +11,9 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import { setGridByAlgorithm } from "../grid/gridSlice";
+import { Algorithms } from "../../algorithms/algorithms";
+import { useDispatch, useSelector } from "react-redux";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -18,6 +21,9 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const dispatch = useDispatch();
+  const nodeTypes = useSelector((state) => state.nodeTypes.nodeTypes);
+  const grid = useSelector((state) => state.grid);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -94,10 +100,24 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Button
               // key={page}
+              onClick={() =>
+                dispatch(
+                  setGridByAlgorithm({
+                    Algorithm: Algorithms.Evens,
+                    nodeTypes: nodeTypes,
+                  })
+                )
+              }
+              sx={{ my: 2, color: "white", display: "block" }}
+            >
+              Evens
+            </Button>
+            <Button
+              // key={page}
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
             >
-              Test
+              Random
             </Button>
           </Box>
 

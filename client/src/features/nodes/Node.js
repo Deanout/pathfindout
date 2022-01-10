@@ -36,8 +36,8 @@ function Node(props) {
       style={nodeStyle}
       onDragStart={() => false}
       draggable="false"
-      onClick={() => handleClick()}
-      onMouseEnter={() => handleMouseEnter()}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
     ></div>
   );
   return nodeContainer;

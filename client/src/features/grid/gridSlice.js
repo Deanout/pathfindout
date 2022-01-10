@@ -1,5 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { grid } from "@mui/system";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
+import { Algorithms } from "../../algorithms/algorithms";
 import { getInitialGridFromAPI } from "./GridAPI";
+import produce from "immer";
 
 const initialState = {
   gridSize: { width: 25, height: 25 },
@@ -30,11 +33,31 @@ export const gridStoreSlice = createSlice({
       state.gridSize = { width: state.grid.width, height: state.grid.height };
     },
     setGrid: (state, action) => {
-      const convertedGrid = convertGridNumbersToNodeTypes(
-        action.payload.data,
-        action.payload.nodeTypes
-      );
-      state.grid.data = convertedGrid;
+      return produce(state, (draftState) => {
+        draftState.grid = action.payload;
+        draftState.grid.data = convertGridNumbersToNodeTypes(
+          action.payload.grid.data,
+          action.payload.nodeTypes
+        );
+      });
+    },
+    setGridByAlgorithm: (state, action) => {
+      const algorithm = action.payload.Algorithm;
+      const nodeTypes = action.payload.nodeTypes;
+
+      return produce(state, (draftState) => {
+        switch (algorithm) {
+          case Algorithms.Evens:
+            draftState.grid.data = generateEvensGrid(
+              state.grid.data,
+              nodeTypes
+            );
+            break;
+          default:
+            console.log("Default case");
+            break;
+        }
+      });
     },
     setLeftMouseButtonState: (state, action) => {
       state.leftMouseButtonState = action.payload;
@@ -44,21 +67,41 @@ export const gridStoreSlice = createSlice({
 });
 
 function convertGridNumbersToNodeTypes(gridToConvert, nodeTypes) {
+  const rowLength = gridToConvert[0].length;
   for (var i = 0; i < gridToConvert.length; i++) {
     for (var j = 0; j < gridToConvert[i].length; j++) {
-      if (j % 2 === 0) {
+      if ((rowLength * i + j) % 2 !== 0) {
         gridToConvert[i][j] = nodeTypes[0];
       } else {
         gridToConvert[i][j] = nodeTypes[1];
       }
-      //gridToConvert[i][j] = nodeTypes[gridToConvert[i][j]];
+      //convertedGrid[i][j] = nodeTypes[convertedGrid[i][j]];
     }
   }
   return gridToConvert;
 }
 
-export const { setGridSize, setLeftMouseButtonState, setGrid } =
-  gridStoreSlice.actions;
+function generateEvensGrid(gridToConvert, nodeTypes) {
+  const rowLength = gridToConvert[0].length;
+  for (var i = 0; i < gridToConvert.length; i++) {
+    for (var j = 0; j < gridToConvert[i].length; j++) {
+      if ((rowLength * i + j) % 2 === 0) {
+        gridToConvert[i][j] = nodeTypes[1];
+      } else {
+        gridToConvert[i][j] = nodeTypes[1];
+      }
+      //convertedGrid[i][j] = nodeTypes[convertedGrid[i][j]];
+    }
+  }
+  return gridToConvert;
+}
+
+export const {
+  setGridSize,
+  setLeftMouseButtonState,
+  setGrid,
+  setGridByAlgorithm,
+} = gridStoreSlice.actions;
 
 /**
  * Selectors allow us to choose a value from the state. Here we're selecting the

@@ -5,17 +5,11 @@ import "./Grid.css";
 import { selectGridSize, selectGrid } from "./gridSlice";
 import { selectNodeTypes } from "../nodetypes/nodeTypesSlice";
 
-const mapStateToProps = (state) => {
-  return {
-    grid: selectGrid(state),
-  };
-};
-
-function Grid() {
+function Grid(props) {
   const dispatch = useDispatch();
-  const grid = useSelector(selectGrid);
-  const nodeTypes = useSelector((state) => state.nodeTypes.nodeTypes);
-
+  const grid = props.grid.data;
+  const nodeTypes = props.nodeTypes;
+  console.log("Grid rendered");
   function handleNodeClick(row, col) {}
   if (grid.length === 0) {
     return <div></div>;
@@ -27,7 +21,7 @@ function Grid() {
     <div className="grid">
       {grid.map((row, rowIdx) => {
         return (
-          <div className="row" key={rowIdx} onDragStart={() => false}>
+          <div className="col" key={rowIdx} onDragStart={() => false}>
             {row.map((col, colIdx) => {
               const node = grid[rowIdx][colIdx];
               return (
