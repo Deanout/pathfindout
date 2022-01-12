@@ -14,6 +14,7 @@ const initialState = {
     data: [],
   },
   leftMouseButtonState: 0,
+  currentNodeType: {},
 };
 
 /**
@@ -60,8 +61,47 @@ export const gridStoreSlice = createSlice({
       });
     },
     setLeftMouseButtonState: (state, action) => {
-      state.leftMouseButtonState = action.payload;
-      console.log("LMB is currently " + state.leftMouseButtonState);
+      if (action.payload !== state.leftMouseButtonState) {
+        state.leftMouseButtonState = action.payload;
+      }
+    },
+    /**
+     * create a function to set a node type in the grid.
+     */
+    setNodeType: (state, action) => {
+      const newNodeType = state.currentNodeType;
+      const oldNodeType =
+        state.grid.data[action.payload.row][action.payload.col];
+      if (oldNodeType !== newNodeType && state.leftMouseButtonState === 1) {
+        return produce(state, (draftState) => {
+          draftState.grid.data[action.payload.row][action.payload.col] =
+            draftState.currentNodeType;
+        });
+      }
+    },
+    setNodeTypeOnClick: (state, action) => {
+      const newNodeType = state.currentNodeType;
+      const oldNodeType =
+        state.grid.data[action.payload.row][action.payload.col];
+      if (oldNodeType !== newNodeType) {
+        return produce(state, (draftState) => {
+          draftState.grid.data[action.payload.row][action.payload.col] =
+            draftState.currentNodeType;
+        });
+      }
+    },
+    /**
+     * Sets the current node type that is applied with a left click on the grid.
+     * @param {*} state The default state.
+     * @param {*} action Should contain the list of NodeTypes, and the new current node type.
+     */
+    setCurrentNodeType: (state, action) => {
+      console.log(action.payload);
+      const nodeTypes = action.payload.nodeTypes;
+      const result = nodeTypes.find((nodeType) => {
+        return nodeType._id === action.payload.id;
+      });
+      state.currentNodeType = result;
     },
   },
 });
@@ -101,6 +141,9 @@ export const {
   setLeftMouseButtonState,
   setGrid,
   setGridByAlgorithm,
+  setNodeType,
+  setCurrentNodeType,
+  setNodeTypeOnClick,
 } = gridStoreSlice.actions;
 
 /**
@@ -108,15 +151,7 @@ export const {
  * Grid size from the state.
  */
 export const selectGridSize = (state) => {
-  if (state?.gridSize === undefined && state?.grid === undefined) {
-    return initialState.gridSize;
-  }
-  if (state?.gridSize !== undefined) {
-    return state.gridSize;
-  }
-  if (state?.grid !== undefined) {
-    return { width: state.grid.width, height: state.grid.height };
-  }
+  return { width: state.grid.width, height: state.grid.height };
 };
 
 // The function below is called a selector and allows us to select a value from
@@ -125,8 +160,12 @@ export const selectGridSize = (state) => {
 export const selectLeftMouseButtonState = (state) =>
   state.gridStore.leftMouseButtonState;
 
-export const selectGrid = (state) => {
+export const selectGridData = (state) => {
   return state.gridStore.grid.data;
+};
+
+export const selectGrid = (state) => {
+  return state.gridStore.grid;
 };
 
 export default gridStoreSlice.reducer;

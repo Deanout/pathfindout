@@ -4,7 +4,11 @@ import "./App.css";
 import Pathfindout from "./features/pathfindout/Pathfindout";
 import ResponsiveAppBar from "./features/navbar/ResponsiveAppBar";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { getInitialGrid, selectGrid, setGrid } from "./features/grid/gridSlice";
+import {
+  getInitialGrid,
+  selectGridData,
+  setGrid,
+} from "./features/grid/gridSlice";
 import {
   retrieveNodeTypes,
   selectNodeTypes,
@@ -13,27 +17,11 @@ import {
 
 function App(props) {
   const dispatch = useDispatch();
-  // dispatch(retrieveNodeTypes())
-  //   .then((response) => {
-  //     return response.payload;
-  //   })
-  //   .then((response) => {
-  //     dispatch(setNodeTypes(response));
-  //     const nodeTypes = response;
 
-  //     dispatch(getInitialGrid())
-  //       .then((response) => response.payload)
-  //       .then((response) => {
-  //         response.nodeTypes = nodeTypes;
-  //         dispatch(setGrid(response));
-  //       });
-  //   });
-  // dispatch(retrieveNodeTypes());
-  // dispatch(getInitialGrid());
   let nodeTypes = [];
   useEffect(() => {
+    let mounted = true;
     dispatch(retrieveNodeTypes()).then((nodeTypeResponse) => {
-      console.log(nodeTypeResponse.payload);
       nodeTypes = nodeTypeResponse.payload;
       dispatch(setNodeTypes(nodeTypes));
     });
@@ -44,8 +32,10 @@ function App(props) {
         nodeTypes: nodeTypes,
       };
       dispatch(setGrid(data));
+      return response.payload.data;
     });
-  });
+    return () => (mounted = false);
+  }, []);
 
   return (
     <div className="App">

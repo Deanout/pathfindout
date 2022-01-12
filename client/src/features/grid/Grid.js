@@ -1,16 +1,12 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Node from "../nodes/Node";
+import React, { memo } from "react";
+
+import MemoizedNode from "../nodes/Node";
 import "./Grid.css";
-import { selectGridSize, selectGrid } from "./gridSlice";
-import { selectNodeTypes } from "../nodetypes/nodeTypesSlice";
 
 function Grid(props) {
-  const dispatch = useDispatch();
-  const grid = props.grid.data;
+  var grid = props.grid.data;
   const nodeTypes = props.nodeTypes;
-  console.log("Grid rendered");
-  function handleNodeClick(row, col) {}
+
   if (grid.length === 0) {
     return <div></div>;
   }
@@ -18,20 +14,26 @@ function Grid(props) {
     return <div></div>;
   }
   return (
-    <div className="grid">
+    <div className="grid" onDragStart={() => false} draggable="false">
       {grid.map((row, rowIdx) => {
         return (
-          <div className="col" key={rowIdx} onDragStart={() => false}>
+          <div
+            className="col"
+            key={rowIdx}
+            onDragStart={() => false}
+            draggable="false"
+          >
             {row.map((col, colIdx) => {
-              const node = grid[rowIdx][colIdx];
+              var node = grid[rowIdx][colIdx];
               return (
-                <Node
+                <MemoizedNode
                   key={colIdx}
                   row={rowIdx}
                   col={colIdx}
                   nodeType={node}
-                  onClickCallback={() => handleNodeClick(rowIdx, colIdx)}
+                  nodeTypes={props.nodeTypes}
                   onDragStart={() => false}
+                  draggable="false"
                 />
               );
             })}
@@ -41,4 +43,4 @@ function Grid(props) {
     </div>
   );
 }
-export default Grid;
+export default memo(Grid);

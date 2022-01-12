@@ -8,7 +8,6 @@ import {
 
 const initialState = {
   nodeTypes: [],
-  currentNodeType: {},
 };
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
@@ -63,12 +62,6 @@ export const nodeTypesSlice = createSlice({
     },
     setNodeTypes: (state, action) => {
       state.nodeTypes = action.payload;
-    },
-    setNodeType: (state, action) => {
-      const result = state.nodeTypes.find((nodeType) => {
-        return nodeType._id === action.payload.id;
-      });
-      state.currentNodeType = result;
     },
   },
 });

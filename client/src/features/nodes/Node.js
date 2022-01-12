@@ -1,46 +1,59 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { selectLeftMouseButtonState } from "../grid/gridSlice";
-import { selectCurrentNodeType } from "../nodetypes/nodeTypesSlice";
+import React, { memo, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  setNodeType,
+  setLeftMouseButtonState,
+  setNodeTypeOnClick,
+} from "../grid/gridSlice";
+
 import "./Node.css";
 function Node(props) {
-  const initialColor = props.nodeType.color;
-  const [nodeStyle, setNodeStyle] = useState({ backgroundColor: initialColor });
-  const leftMouseButtonState = useSelector(selectLeftMouseButtonState);
-  const currentNodeType = useSelector(selectCurrentNodeType);
-  // console.log("Inside the node");
-  // console.log(props.nodeType);
+  const dispatch = useDispatch();
+  const [LMB, setLMB] = useState(false);
+  const [nodeStyle, setNodeStyle] = useState({
+    backgroundColor: props.nodeType.color,
+  });
+  useEffect(() => {
+    setNodeStyle({ backgroundColor: props.nodeType.color });
+  }, [props.nodeType]);
 
-  function handleClick() {
-    modifyNode(currentNodeType);
+  function handleClick(e) {
+    dispatch(
+      setNodeTypeOnClick({
+        row: props.row,
+        col: props.col,
+      })
+    );
   }
   /**
    * Check if the left mouse button is down.
    * If the mouse button is down, console.log("Mouse is down")
    */
-  function handleMouseEnter() {
-    // console.log(leftMouseButtonState);
-    // console.log(currentNodeType);
-    if (leftMouseButtonState === 1) {
-      modifyNode(currentNodeType);
+  function handleMouseEnter(e) {
+    const currentLMB = e.buttons;
+    if (currentLMB !== LMB) {
+      setLMB(currentLMB);
+      dispatch(setLeftMouseButtonState(currentLMB));
+      dispatch(
+        setNodeType({
+          row: props.row,
+          col: props.col,
+        })
+      );
     }
   }
 
-  function modifyNode() {
-    setNodeStyle({ backgroundColor: currentNodeType.color });
-  }
-  const nodeContainer = (
+  return (
     <div
       id={`node-${props.row}-${props.col}`}
-      className={"node"}
+      className={`node ${props.nodeType.name}`}
       style={nodeStyle}
       onDragStart={() => false}
       draggable="false"
-      onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
+      onClick={() => handleClick()}
+      onMouseEnter={(e) => handleMouseEnter(e)}
     ></div>
   );
-  return nodeContainer;
 }
 
-export default Node;
+export default memo(Node);

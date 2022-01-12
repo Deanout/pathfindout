@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import {
   selectNodeTypes,
   setNodeTypes,
-  setNodeType,
   retrieveNodeTypes,
   deleteAllNodeTypesFromAPI,
   deleteNodeTypeFromAPI,
 } from "./nodeTypesSlice";
+import { setCurrentNodeType } from "../grid/gridSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
@@ -30,10 +30,10 @@ function NodeTypesList(props) {
   }
   function handleNodeTypeClick(id) {
     console.log(`Handling NodeType Click for ${id}`);
-    dispatch(setNodeType({ id: id }));
+    const data = { id: id, nodeTypes: props.nodeTypes };
+    dispatch(setCurrentNodeType(data));
   }
 
-  let nodeTypes = useSelector(selectNodeTypes);
   return (
     <div>
       <h2>Node Types</h2>
@@ -52,7 +52,7 @@ function NodeTypesList(props) {
           </tr>
         </thead>
         <tbody>
-          {nodeTypes?.nodeTypes?.map((nodeType) => (
+          {props.nodeTypes.map((nodeType) => (
             <tr key={`nodetype-${nodeType._id}`}>
               <td>{nodeType._id}</td>
               <td>{nodeType.name}</td>
