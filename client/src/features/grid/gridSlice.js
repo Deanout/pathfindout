@@ -48,8 +48,17 @@ export const gridStoreSlice = createSlice({
 
       return produce(state, (draftState) => {
         switch (algorithm) {
+          case Algorithms.Clear:
+            draftState.grid.data = clearGrid(state.grid.data, nodeTypes);
+            break;
           case Algorithms.Evens:
             draftState.grid.data = generateEvensGrid(
+              state.grid.data,
+              nodeTypes
+            );
+            break;
+          case Algorithms.Random:
+            draftState.grid.data = generateRandomGrid(
               state.grid.data,
               nodeTypes
             );
@@ -106,16 +115,29 @@ export const gridStoreSlice = createSlice({
   },
 });
 
+function clearGrid(gridToClear, nodeTypes) {
+  for (var i = 0; i < gridToClear.length; i++) {
+    for (var j = 0; j < gridToClear[i].length; j++) {
+      gridToClear[i][j] = nodeTypes[0];
+    }
+  }
+  return gridToClear;
+}
+
 function convertGridNumbersToNodeTypes(gridToConvert, nodeTypes) {
-  const rowLength = gridToConvert[0].length;
   for (var i = 0; i < gridToConvert.length; i++) {
     for (var j = 0; j < gridToConvert[i].length; j++) {
-      if ((rowLength * i + j) % 2 !== 0) {
-        gridToConvert[i][j] = nodeTypes[0];
-      } else {
-        gridToConvert[i][j] = nodeTypes[1];
-      }
-      //convertedGrid[i][j] = nodeTypes[convertedGrid[i][j]];
+      const node = gridToConvert[i][j];
+      gridToConvert[i][j] = nodeTypes[node];
+    }
+  }
+  return gridToConvert;
+}
+
+function generateRandomGrid(gridToConvert, nodeTypes) {
+  for (var i = 0; i < gridToConvert.length; i++) {
+    for (var j = 0; j < gridToConvert[i].length; j++) {
+      gridToConvert[i][j] = nodeTypes[Math.floor(Math.random() * 2)];
     }
   }
   return gridToConvert;
@@ -126,11 +148,10 @@ function generateEvensGrid(gridToConvert, nodeTypes) {
   for (var i = 0; i < gridToConvert.length; i++) {
     for (var j = 0; j < gridToConvert[i].length; j++) {
       if ((rowLength * i + j) % 2 === 0) {
-        gridToConvert[i][j] = nodeTypes[1];
+        gridToConvert[i][j] = nodeTypes[0];
       } else {
         gridToConvert[i][j] = nodeTypes[1];
       }
-      //convertedGrid[i][j] = nodeTypes[convertedGrid[i][j]];
     }
   }
   return gridToConvert;

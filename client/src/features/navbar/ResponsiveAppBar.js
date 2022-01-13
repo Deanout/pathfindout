@@ -114,10 +114,31 @@ const ResponsiveAppBar = () => {
             </Button>
             <Button
               // key={page}
-              onClick={handleCloseNavMenu}
+              onClick={() => {
+                dispatch(
+                  setGridByAlgorithm({
+                    Algorithm: Algorithms.Random,
+                    nodeTypes: nodeTypes,
+                  })
+                );
+              }}
               sx={{ my: 2, color: "white", display: "block" }}
             >
               Random
+            </Button>
+            <Button
+              // key={page}
+              onClick={() => {
+                dispatch(
+                  setGridByAlgorithm({
+                    Algorithm: Algorithms.Clear,
+                    nodeTypes: nodeTypes,
+                  })
+                );
+              }}
+              sx={{ my: 2, color: "white", display: "block" }}
+            >
+              Clear
             </Button>
           </Box>
 

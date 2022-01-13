@@ -1,4 +1,5 @@
 export const Algorithms = {
+  Clear: 0,
   Random: 1,
   Evens: 2,
   BFS: 3,
