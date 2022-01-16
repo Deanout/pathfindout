@@ -6,7 +6,6 @@ const seed = 8675309;
 const simplex = new SimplexNoise(seed);
 
 export function generateGridFrom2DSimplex(grid, nodeTypes) {
-  console.log("Hello");
   const width = grid[0].length;
   const height = grid.length;
   const newGrid = [];
@@ -15,14 +14,6 @@ export function generateGridFrom2DSimplex(grid, nodeTypes) {
    * The number of octaves to use in the noise generation.
    */
   const octaves = 2;
-  /**
-   * The frequency of the octaves.
-   */
-  const frequency = 0.01;
-  /**
-   * The amplitude of the octaves.
-   */
-  const amplitude = 0.5;
   /**
    * Each octave is given a frequency to equivalent to the lacunarity raised to the power of the octave - 1.
    */

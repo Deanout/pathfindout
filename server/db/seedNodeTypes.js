@@ -48,6 +48,28 @@ const Stone = new NodeTypeModel({
   color: "#7f7f7f",
   walkable: true,
 });
-
-const Nodetypes = [Air, Wall, Water, Lava, Sand, Grass, Dirt, Stone];
+const Start = new NodeTypeModel({
+  name: "Start",
+  weight: 0,
+  color: "#00ff00",
+  walkable: true,
+});
+const End = new NodeTypeModel({
+  name: "End",
+  weight: 0,
+  color: "#ff0000",
+  walkable: true,
+});
+const Nodetypes = [
+  Air,
+  Wall,
+  Water,
+  Lava,
+  Sand,
+  Grass,
+  Dirt,
+  Stone,
+  Start,
+  End,
+];
 module.exports = Nodetypes;
