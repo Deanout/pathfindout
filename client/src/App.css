@@ -1,0 +1,8 @@
+.pathfindout_container {
+  width: 500px;
+  height: 500px;
+}
+.pathfindout_main {
+  overflow: hidden;
+  overflow-y: hidden;
+}

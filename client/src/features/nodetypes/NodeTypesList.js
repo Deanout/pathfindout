@@ -52,7 +52,7 @@ function NodeTypesList(props) {
           </tr>
         </thead>
         <tbody>
-          {props.nodeTypes.map((nodeType) => (
+          {props?.nodeTypes?.map((nodeType) => (
             <tr key={`nodetype-${nodeType._id}`}>
               <td>{nodeType._id}</td>
               <td>{nodeType.name}</td>

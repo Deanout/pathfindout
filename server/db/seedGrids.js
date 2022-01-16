@@ -1,7 +1,7 @@
 const GridModel = require("../models/GridModel");
 
-const initGridWidth = 50;
-const initGridHeight = 50;
+const initGridWidth = 20;
+const initGridHeight = 20;
 
 const InitialGrid = new GridModel({
   name: "Initial Grid",

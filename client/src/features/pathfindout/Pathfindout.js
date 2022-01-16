@@ -11,7 +11,7 @@ function Pathfindout(props) {
   const dispatch = useDispatch();
 
   return (
-    <main>
+    <main className="pathfindout_main">
       <MemoizedGrid nodeTypes={props.nodeTypes.nodeTypes} grid={props.grid} />
       <br />
       <NodeTypesList nodeTypes={props.nodeTypes.nodeTypes} />

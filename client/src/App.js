@@ -1,40 +1,26 @@
 import { Container } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import "./App.css";
 import Pathfindout from "./features/pathfindout/Pathfindout";
 import ResponsiveAppBar from "./features/navbar/ResponsiveAppBar";
 import { connect, useDispatch, useSelector } from "react-redux";
 import {
+  setGridByDimensions,
   getInitialGrid,
-  selectGridData,
   setGrid,
+  setCurrentNodeType,
 } from "./features/grid/gridSlice";
 import {
   retrieveNodeTypes,
-  selectNodeTypes,
   setNodeTypes,
 } from "./features/nodetypes/nodeTypesSlice";
+import _ from "lodash";
 
 function App(props) {
   const dispatch = useDispatch();
-
-  let nodeTypes = [];
+  let nodeTypes;
   useEffect(() => {
-    let mounted = true;
-    dispatch(retrieveNodeTypes()).then((nodeTypeResponse) => {
-      nodeTypes = nodeTypeResponse.payload;
-      dispatch(setNodeTypes(nodeTypes));
-    });
-    dispatch(getInitialGrid()).then((response) => {
-      response.nodeTypes = props.nodeTypes;
-      const data = {
-        grid: response.payload,
-        nodeTypes: nodeTypes,
-      };
-      dispatch(setGrid(data));
-      return response.payload.data;
-    });
-    return () => (mounted = false);
+    nodeTypes = setupPathfindout(dispatch);
   }, []);
 
   return (
@@ -42,10 +28,13 @@ function App(props) {
       <div className="App-header">
         <ResponsiveAppBar />
       </div>
-      <Container maxWidth="sm">
-        <Pathfindout />
+      <Container>
+        <h1>Pathfindout</h1>
+        <p>If life can find a way, so can your algorithms.</p>
+        <div id="pathfindout_container">
+          <Pathfindout />
+        </div>
       </Container>
-
       {/* NodeTypes creation view? Pane?*/}
       {/* <NodeTypes />
         <NodeTypesList /> */}
@@ -53,4 +42,29 @@ function App(props) {
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    nodeTypes: state.nodeTypes,
+  };
+};
+export default connect(mapStateToProps)(App);
+
+function setupPathfindout(dispatch, props) {
+  let nodeTypes;
+  dispatch(retrieveNodeTypes()).then((nodeTypeResponse) => {
+    nodeTypes = nodeTypeResponse.payload;
+    dispatch(setNodeTypes(nodeTypes));
+    dispatch(
+      setCurrentNodeType({ nodeTypes: nodeTypes, id: nodeTypes[0]._id })
+    );
+  });
+
+  dispatch(getInitialGrid()).then((response) => {
+    const data = {
+      grid: response.payload,
+      nodeTypes: nodeTypes,
+    };
+    dispatch(setGrid(data));
+  });
+  return nodeTypes;
+}

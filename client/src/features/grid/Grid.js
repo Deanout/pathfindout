@@ -7,15 +7,15 @@ function Grid(props) {
   var grid = props.grid.data;
   const nodeTypes = props.nodeTypes;
 
-  if (grid.length === 0) {
+  if (grid?.length === 0) {
     return <div></div>;
   }
-  if (nodeTypes.length === 0) {
+  if (nodeTypes?.length === 0) {
     return <div></div>;
   }
   return (
     <div className="grid" onDragStart={() => false} draggable="false">
-      {grid.map((row, rowIdx) => {
+      {grid?.map((row, rowIdx) => {
         return (
           <div
             className="col"

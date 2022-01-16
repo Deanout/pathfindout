@@ -6,6 +6,7 @@ import produce from "immer";
 
 const initialState = {
   gridSize: { width: 25, height: 25 },
+  nodeSize: { width: 25, height: 25 },
   grid: {
     _id: 1,
     name: "",
@@ -112,6 +113,26 @@ export const gridStoreSlice = createSlice({
       });
       state.currentNodeType = result;
     },
+    setGridByDimensions: (state, action) => {
+      console.log("Setting grid dimensions");
+      const width = action.payload.width;
+      const height = action.payload.height;
+      const nodeWidth = state.nodeSize.width;
+      const nodeHeight = state.nodeSize.height;
+      const nodeTypes = action.payload.nodeTypes;
+      produce(state, (draftState) => {
+        const gridToRevert = createGridByDimensions(
+          width,
+          height,
+          nodeWidth,
+          nodeHeight
+        );
+        draftState.grid.data = convertGridNumbersToNodeTypes(
+          gridToRevert,
+          nodeTypes
+        );
+      });
+    },
   },
 });
 
@@ -124,7 +145,21 @@ function clearGrid(gridToClear, nodeTypes) {
   return gridToClear;
 }
 
+function createGridByDimensions(width, height, nodeWidth, nodeHeight) {
+  const grid = [];
+  const normalizedWidth = Math.floor(width / nodeWidth);
+  const normalizedHeight = Math.floor(height / nodeHeight);
+  for (var i = 0; i < normalizedHeight; i++) {
+    grid.push([]);
+    for (var j = 0; j < normalizedWidth; j++) {
+      grid[i].push();
+    }
+  }
+  return grid;
+}
+
 function convertGridNumbersToNodeTypes(gridToConvert, nodeTypes) {
+  console.log(nodeTypes);
   for (var i = 0; i < gridToConvert.length; i++) {
     for (var j = 0; j < gridToConvert[i].length; j++) {
       const node = gridToConvert[i][j];
@@ -165,6 +200,7 @@ export const {
   setNodeType,
   setCurrentNodeType,
   setNodeTypeOnClick,
+  setGridByDimensions,
 } = gridStoreSlice.actions;
 
 /**

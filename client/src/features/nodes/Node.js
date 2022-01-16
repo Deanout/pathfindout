@@ -9,7 +9,7 @@ import {
 import "./Node.css";
 function Node(props) {
   const dispatch = useDispatch();
-  const [LMB, setLMB] = useState(false);
+  const [LMB, setLMB] = useState(0);
   const [nodeStyle, setNodeStyle] = useState({
     backgroundColor: props.nodeType.color,
   });
@@ -31,7 +31,7 @@ function Node(props) {
    */
   function handleMouseEnter(e) {
     const currentLMB = e.buttons;
-    if (currentLMB !== LMB) {
+    if (currentLMB === 1) {
       setLMB(currentLMB);
       dispatch(setLeftMouseButtonState(currentLMB));
       dispatch(
