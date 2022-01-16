@@ -51,20 +51,23 @@ export default connect(mapStateToProps)(App);
 
 function setupPathfindout(dispatch, props) {
   let nodeTypes;
-  dispatch(retrieveNodeTypes()).then((nodeTypeResponse) => {
-    nodeTypes = nodeTypeResponse.payload;
-    dispatch(setNodeTypes(nodeTypes));
-    dispatch(
-      setCurrentNodeType({ nodeTypes: nodeTypes, id: nodeTypes[0]._id })
-    );
-  });
+  dispatch(retrieveNodeTypes())
+    .then((nodeTypeResponse) => {
+      nodeTypes = nodeTypeResponse.payload;
+      dispatch(setNodeTypes(nodeTypes));
+      dispatch(
+        setCurrentNodeType({ nodeTypes: nodeTypes, id: nodeTypes[0]._id })
+      );
+    })
+    .then((response) => {
+      dispatch(getInitialGrid()).then((response) => {
+        const data = {
+          grid: response.payload,
+          nodeTypes: nodeTypes,
+        };
+        dispatch(setGrid(data));
+      });
+    });
 
-  dispatch(getInitialGrid()).then((response) => {
-    const data = {
-      grid: response.payload,
-      nodeTypes: nodeTypes,
-    };
-    dispatch(setGrid(data));
-  });
   return nodeTypes;
 }

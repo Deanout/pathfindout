@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import { Algorithms } from "../../algorithms/algorithms";
 import { getInitialGridFromAPI } from "./GridAPI";
 import produce from "immer";
+import { generateGridFrom2DSimplex } from "../../algorithms/simplex";
 
 const initialState = {
   gridSize: { width: 25, height: 25 },
@@ -60,6 +61,13 @@ export const gridStoreSlice = createSlice({
             break;
           case Algorithms.Random:
             draftState.grid.data = generateRandomGrid(
+              state.grid.data,
+              nodeTypes
+            );
+            break;
+          case Algorithms.Simplex:
+            console.log("Generating Simplex Grid");
+            draftState.grid.data = generateGridFrom2DSimplex(
               state.grid.data,
               nodeTypes
             );

@@ -131,6 +131,20 @@ const ResponsiveAppBar = () => {
               onClick={() => {
                 dispatch(
                   setGridByAlgorithm({
+                    Algorithm: Algorithms.Simplex,
+                    nodeTypes: nodeTypes,
+                  })
+                );
+              }}
+              sx={{ my: 2, color: "white", display: "block" }}
+            >
+              Simplex Terrain
+            </Button>
+            <Button
+              // key={page}
+              onClick={() => {
+                dispatch(
+                  setGridByAlgorithm({
                     Algorithm: Algorithms.Clear,
                     nodeTypes: nodeTypes,
                   })
