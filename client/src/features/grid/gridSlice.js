@@ -139,7 +139,6 @@ export const gridStoreSlice = createSlice({
      * @param {*} action Should contain the list of NodeTypes, and the new current node type.
      */
     setCurrentNodeType: (state, action) => {
-      console.log(action.payload);
       const nodeTypes = action.payload.nodeTypes;
       const result = nodeTypes.find((nodeType) => {
         return nodeType._id === action.payload.id;
@@ -147,7 +146,6 @@ export const gridStoreSlice = createSlice({
       state.currentNodeType = result;
     },
     setGridByDimensions: (state, action) => {
-      console.log("Setting grid dimensions");
       const width = action.payload.width;
       const height = action.payload.height;
       const nodeWidth = state.nodeSize.width;
@@ -210,7 +208,6 @@ function createGridByDimensions(width, height, nodeWidth, nodeHeight) {
 }
 
 function convertGridNumbersToNodeTypes(gridToConvert, nodeTypes) {
-  console.log(nodeTypes);
   for (var i = 0; i < gridToConvert.length; i++) {
     for (var j = 0; j < gridToConvert[i].length; j++) {
       const node = gridToConvert[i][j];
