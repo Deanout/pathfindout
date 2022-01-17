@@ -34,8 +34,11 @@ export const gridStoreSlice = createSlice({
   name: "grid",
   initialState,
   reducers: {
-    setGridSize: (state, action) => {
-      state.gridSize = { width: state.grid.width, height: state.grid.height };
+    setGridSize: (state) => {
+      state.gridSize = {
+        width: state.grid.data[0].length,
+        height: state.grid.data.length,
+      };
     },
     setGrid: (state, action) => {
       return produce(state, (draftState) => {
@@ -170,16 +173,22 @@ export const gridStoreSlice = createSlice({
 function setStartAndEndNodePreviousNodes(draftState) {
   const startRow = draftState.start.row;
   const startCol = draftState.start.col;
-  const endRow = draftState.end.row;
-  const endCol = draftState.end.col;
+  const endRow = clamp(
+    draftState.end.row,
+    0,
+    draftState.grid.data[0].length - 1
+  );
+  const endCol = clamp(draftState.end.col, 0, draftState.grid.data.length - 1);
+
   draftState.start = {
-    row: 3,
-    col: 3,
+    row: clamp(3, 0, draftState.grid.data[0].length),
+    col: clamp(3, 0, draftState.grid.data.length),
     previousNodeType: draftState.grid.data[startRow][startCol],
   };
+
   draftState.end = {
-    row: 18,
-    col: 18,
+    row: clamp(18, 0, draftState.grid.data[0].length),
+    col: clamp(18, 0, draftState.grid.data.length),
     previousNodeType: draftState.grid.data[endRow][endCol],
   };
   return draftState;
@@ -275,6 +284,10 @@ export const selectGridData = (state) => {
 
 export const selectGrid = (state) => {
   return state.gridStore.grid;
+};
+
+const clamp = (num, min, max) => {
+  return Math.min(Math.max(num, min), max);
 };
 
 export default gridStoreSlice.reducer;
