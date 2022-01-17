@@ -5,9 +5,7 @@ const seed = 8675309;
 // do this only once as it is relatively expensive
 const simplex = new SimplexNoise(seed);
 
-export function generateGridFrom2DSimplex(grid, nodeTypes) {
-  const width = grid[0].length;
-  const height = grid.length;
+export function generateGridFrom2DSimplex(width, height, nodeTypes) {
   const newGrid = [];
 
   /**

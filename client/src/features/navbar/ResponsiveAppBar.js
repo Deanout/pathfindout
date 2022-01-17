@@ -40,6 +40,71 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
+  const evens = (
+    <Button
+      // key={page}
+      onClick={() =>
+        dispatch(
+          setGridByAlgorithm({
+            Algorithm: Algorithms.Evens,
+            nodeTypes: nodeTypes,
+          })
+        )
+      }
+      sx={{ my: 2, color: "white", display: "block" }}
+    >
+      Evens
+    </Button>
+  );
+  const random = (
+    <Button
+      // key={page}
+      onClick={() => {
+        dispatch(
+          setGridByAlgorithm({
+            Algorithm: Algorithms.Random,
+            nodeTypes: nodeTypes,
+          })
+        );
+      }}
+      sx={{ my: 2, color: "white", display: "block" }}
+    >
+      Random
+    </Button>
+  );
+  const simplex = (
+    <Button
+      // key={page}
+      onClick={() => {
+        dispatch(
+          setGridByAlgorithm({
+            Algorithm: Algorithms.Simplex,
+            nodeTypes: nodeTypes,
+          })
+        );
+      }}
+      sx={{ my: 2, color: "white", display: "block" }}
+    >
+      Simplex Terrain
+    </Button>
+  );
+  const clear = (
+    <Button
+      // key={page}
+      onClick={() => {
+        dispatch(
+          setGridByAlgorithm({
+            Algorithm: Algorithms.Clear,
+            nodeTypes: nodeTypes,
+          })
+        );
+      }}
+      sx={{ my: 2, color: "white", display: "block" }}
+    >
+      Clear
+    </Button>
+  );
+
   return (
     <AppBar position="static" id="app_bar">
       <Container maxWidth="xl">
@@ -95,65 +160,13 @@ const ResponsiveAppBar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            LOGO
+            Pathfindout
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Button
-              // key={page}
-              onClick={() =>
-                dispatch(
-                  setGridByAlgorithm({
-                    Algorithm: Algorithms.Evens,
-                    nodeTypes: nodeTypes,
-                  })
-                )
-              }
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              Evens
-            </Button>
-            <Button
-              // key={page}
-              onClick={() => {
-                dispatch(
-                  setGridByAlgorithm({
-                    Algorithm: Algorithms.Random,
-                    nodeTypes: nodeTypes,
-                  })
-                );
-              }}
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              Random
-            </Button>
-            <Button
-              // key={page}
-              onClick={() => {
-                dispatch(
-                  setGridByAlgorithm({
-                    Algorithm: Algorithms.Simplex,
-                    nodeTypes: nodeTypes,
-                  })
-                );
-              }}
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              Simplex Terrain
-            </Button>
-            <Button
-              // key={page}
-              onClick={() => {
-                dispatch(
-                  setGridByAlgorithm({
-                    Algorithm: Algorithms.Clear,
-                    nodeTypes: nodeTypes,
-                  })
-                );
-              }}
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              Clear
-            </Button>
+            {evens}
+            {random}
+            {simplex}
+            {clear}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
