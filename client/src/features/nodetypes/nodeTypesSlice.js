@@ -52,14 +52,6 @@ export const nodeTypesSlice = createSlice({
   name: "nodeTypes",
   initialState,
   reducers: {
-    editNodeType: (state, action) => {
-      state.nodeTypes = state.nodeTypes.map((nodeType) => {
-        if (nodeType.id === action.payload.id) {
-          return action.payload;
-        }
-        return nodeType;
-      });
-    },
     setNodeTypes: (state, action) => {
       state.nodeTypes = action.payload;
     },
@@ -80,6 +72,7 @@ export const {
  * nodetypes from the state.
  */
 export const selectNodeTypes = (state) => {
+  console.log(state);
   return state.nodeTypes;
 };
 /**
@@ -91,5 +84,5 @@ export const selectNodeType = (state, id) => {
 };
 
 export const selectCurrentNodeType = (state) => state.nodeTypes.currentNodeType;
-
+export const selectNodeTypesState = (state) => state;
 export default nodeTypesSlice.reducer;
