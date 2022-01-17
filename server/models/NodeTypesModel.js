@@ -19,6 +19,10 @@ const NodeTypesSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  previousNodeType: {
+    type: Number,
+    required: false,
+  },
 });
 
 const NodeTypes = mongoose.model("NodeTypes", NodeTypesSchema);

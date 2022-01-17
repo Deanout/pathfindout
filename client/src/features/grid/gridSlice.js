@@ -8,6 +8,8 @@ import { generateGridFrom2DSimplex } from "../../algorithms/simplex";
 const initialState = {
   gridSize: { width: 25, height: 25 },
   nodeSize: { width: 25, height: 25 },
+  start: { row: 3, col: 3, previousNodeType: "Air" },
+  end: { row: 18, col: 18, previousNodeType: "Air" },
   grid: {
     _id: 1,
     name: "",
@@ -42,6 +44,7 @@ export const gridStoreSlice = createSlice({
           action.payload.grid.data,
           action.payload.nodeTypes
         );
+        setStartAndEndNodePreviousNodes(draftState);
       });
     },
     setGridByAlgorithm: (state, action) => {
@@ -51,15 +54,18 @@ export const gridStoreSlice = createSlice({
       return produce(state, (draftState) => {
         switch (algorithm) {
           case Algorithms.Clear:
+            console.log("Clearing grid");
             draftState.grid.data = clearGrid(state.grid.data, nodeTypes);
             break;
           case Algorithms.Evens:
+            console.log("Generating evens grid");
             draftState.grid.data = generateEvensGrid(
               state.grid.data,
               nodeTypes
             );
             break;
           case Algorithms.Random:
+            console.log("Generating random grid");
             draftState.grid.data = generateRandomGrid(
               state.grid.data,
               nodeTypes
@@ -68,7 +74,8 @@ export const gridStoreSlice = createSlice({
           case Algorithms.Simplex:
             console.log("Generating Simplex Grid");
             draftState.grid.data = generateGridFrom2DSimplex(
-              state.grid.data,
+              state.grid.data[0].length,
+              state.grid.data.length,
               nodeTypes
             );
             break;
@@ -76,6 +83,7 @@ export const gridStoreSlice = createSlice({
             console.log("Default case");
             break;
         }
+        setStartAndEndNodePreviousNodes(draftState);
       });
     },
     setLeftMouseButtonState: (state, action) => {
@@ -103,6 +111,23 @@ export const gridStoreSlice = createSlice({
         state.grid.data[action.payload.row][action.payload.col];
       if (oldNodeType !== newNodeType) {
         return produce(state, (draftState) => {
+          if (newNodeType.name === "Start") {
+            draftState.grid.data[draftState.start.row][draftState.start.col] =
+              draftState.start.previousNodeType;
+            draftState.start = {
+              row: action.payload.row,
+              col: action.payload.col,
+              previousNodeType: oldNodeType,
+            };
+          } else if (newNodeType.name === "End") {
+            draftState.grid.data[draftState.end.row][draftState.end.col] =
+              draftState.end.previousNodeType;
+            draftState.end = {
+              row: action.payload.row,
+              col: action.payload.col,
+              previousNodeType: oldNodeType,
+            };
+          }
           draftState.grid.data[action.payload.row][action.payload.col] =
             draftState.currentNodeType;
         });
@@ -144,13 +169,31 @@ export const gridStoreSlice = createSlice({
   },
 });
 
+function setStartAndEndNodePreviousNodes(draftState) {
+  const startRow = draftState.start.row;
+  const startCol = draftState.start.col;
+  const endRow = draftState.end.row;
+  const endCol = draftState.end.col;
+  draftState.start = {
+    row: 3,
+    col: 3,
+    previousNodeType: draftState.grid.data[startRow][startCol],
+  };
+  draftState.end = {
+    row: 18,
+    col: 18,
+    previousNodeType: draftState.grid.data[endRow][endCol],
+  };
+  return draftState;
+}
+
 function clearGrid(gridToClear, nodeTypes) {
-  for (var i = 0; i < gridToClear.length; i++) {
-    for (var j = 0; j < gridToClear[i].length; j++) {
-      gridToClear[i][j] = nodeTypes[0];
-    }
-  }
-  return gridToClear;
+  const grid = gridToClear.map((row) => {
+    return row.map((node) => {
+      return nodeTypes[0];
+    });
+  });
+  return grid;
 }
 
 function createGridByDimensions(width, height, nodeWidth, nodeHeight) {
@@ -178,26 +221,30 @@ function convertGridNumbersToNodeTypes(gridToConvert, nodeTypes) {
 }
 
 function generateRandomGrid(gridToConvert, nodeTypes) {
-  for (var i = 0; i < gridToConvert.length; i++) {
-    for (var j = 0; j < gridToConvert[i].length; j++) {
-      gridToConvert[i][j] = nodeTypes[Math.floor(Math.random() * 2)];
-    }
-  }
-  return gridToConvert;
+  const selectableNodeTypes = nodeTypes.filter(
+    (nodeType) => nodeType.name !== "Start" && nodeType.name !== "End"
+  );
+  const numberOfNodeTypes = selectableNodeTypes.length;
+  const grid = gridToConvert.map((row) => {
+    return row.map((node) => {
+      return selectableNodeTypes[Math.floor(Math.random() * numberOfNodeTypes)];
+    });
+  });
+  return grid;
 }
 
 function generateEvensGrid(gridToConvert, nodeTypes) {
   const rowLength = gridToConvert[0].length;
-  for (var i = 0; i < gridToConvert.length; i++) {
-    for (var j = 0; j < gridToConvert[i].length; j++) {
-      if ((rowLength * i + j) % 2 === 0) {
-        gridToConvert[i][j] = nodeTypes[0];
+  const grid = gridToConvert.map((row) => {
+    return row.map((node) => {
+      if (row.indexOf(node) % 2 === 0) {
+        return nodeTypes[0];
       } else {
-        gridToConvert[i][j] = nodeTypes[1];
+        return nodeTypes[1];
       }
-    }
-  }
-  return gridToConvert;
+    });
+  });
+  return grid;
 }
 
 export const {
